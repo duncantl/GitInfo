@@ -1,0 +1,173 @@
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
+
+/usr/local/libexec/git-core/ is where to install additional git commands such as git-filter-repo
+
+
+## list only untracked files
+```
+git ls-files --others --exclude-standard
+```
+
+
+## Undo stage
+
+```
+git rm --cached file
+```
+or 
+```
+git restore --staged file
+```
+
+# Undo commit
+
+git reset HEAD^
+
+
+
+# Merge last n commits into combinations of commits
+
+```
+git rebase -i HEAD~n
+```
+
+
+# Which files will be pushed
+
+```
+git diff --stat --cached origin/master
+```
+
+# Which files were in a commit
+
+```
+git show --pretty="" --name-only <commit-id>
+
+git diff-tree --no-commit-id --name-only <commit-id> -r
+```
+
+# fast-export
+
+```
+git fast-export --all > TMP
+```
+
+```
+git fast-export --all | filter | git fast-import
+```
+
+# See all files that are in the repository, even the deleted/removed ones.
+
+git log --pretty=format: --name-only --diff-filter=A | sort - | sed '/^$/d'
+
+# Purge all history of a file in a repos.
+
+```
+git filter-repo --invert-paths --path PATH-TO-YOUR-FILE
+```
+
+# Merge one repository into another as a subdirectory.
+
+Goal is to keep the history.
+
+x-yuri
+https://stackoverflow.com/questions/1683531/how-to-import-existing-git-repository-into-another/62104099#62104099
+
+Merging a (BioPhysics) into b (OGS)
+
+git clone ~/OGS
+git clone git@github.com:duncantl/OGS.git
+
+git clone ~/OGS/BioPhysics
+cd BioPhysics
+git filter-repo --to-subdirectory-filter BioPhysics
+cd ../OGS
+git remote add BPH ../BioPhysics
+git fetch BPH
+git merge --allow-unrelated-histories BPH/main  -m "merging MajorProfByProgram into OGS"
+git remote remove BPH
+
+
+In OGS/
+git pull --no-edit
+
+# Move a directory to its own repos
+
+https://docs.github.com/en/get-started/using-git/splitting-a-subfolder-out-into-a-new-repository
+
+cd /tmp
+git clone ~/OGS
+cd /tmp/OGS/
+git filter-repo --force --subdirectory-filter GradGroupAnalysis
+
+Then have to remove all the files from the original repos.
+
+
+# Example
+
+TestGit/
+
+
+  203  git add foo
+  204  git diff foo
+  205  git diff --cached foo
+  206  git restore -staged foo
+  207  git restore --staged foo
+  208  git rm -cached foo
+  209  git rm --cached foo
+  210  git status
+  211  git add foo
+  212  git commit -m "foo version 1"
+  213  emacs foo
+  214  git add foo
+  215  git status
+  216  git rm --cached foo
+  217  git status
+  218  git add foo
+  219  git commit -m "version 2"
+  220  emacs foo
+  221  git add foo
+  222  git commit -m "version 3"
+  223  git rebase -i HEAD~3
+  224  git log
+  225  git rebase -i HEAD~3
+  226  git rebase -i HEAD~2
+  227  git log
+  228  git rebase -i HEAD~2
+  229  git rebase -i HEAD~
+  230  git commit --amend
+  231  git status
+  232  git
+  233  git log
+  234  git log
+  235  emacs -nw foo
+  236  git add foo
+  237  git commit -m "done"
+  238  git log
+  239  git reset HEAD^
+  240  git log
+  241  git diff foo
+  242  ls
+  243  ls
+  244  cd ..
+  245  ls
+  246  cd -
+  247  ls
+  248  git status
+  249  emacs -nw bar
+  250  git status
+  251  git add foo bar
+  252  git commit -m "commit both foo and bar"
+  253  git log
+  254  git reset HEAD^
+  255  git status
+  256  git status
+  257  git log
+  258  git add bar
+  259  git commit -m "undid bar and foo commit and now committing bar"
+  260  git status
+  261  git add foo
+  262  git commit -m 'now committing foo'
+  263  git rebase -i HEAD~2
+  264  git log
+  
