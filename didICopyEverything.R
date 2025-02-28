@@ -7,9 +7,10 @@ function(new = ".", old = "~/OGS/GradGroupAnalysis")
     paths = c(new, old)
     npaths = normalizePath(paths)
 
-    files = lapply(paths, list.files, recursive = TRUE, include.dirs = TRUE, all = TRUE, full.names = TRUE)
+    files = lapply(npaths, list.files, recursive = TRUE, include.dirs = TRUE, all = TRUE, full.names = TRUE)
 
-    files2 = mapply(function(x, p) gsub( paste0("^", p, "/"), "", x),  files, npaths, SIMPLIFY = FALSE)
+    files2 = mapply(function(x, p) gsub( paste0("^", p, "/"), "", x),
+                    files, npaths, SIMPLIFY = FALSE)
 
     files2[[1]] = files2[[1]][ - grep("\\.git/", files2[[1]] ) ]
 
